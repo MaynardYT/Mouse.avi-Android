@@ -1023,13 +1023,13 @@ class PlayState extends MusicBeatState
 					if(daSong == 'roses') FlxG.sound.play(Paths.sound('ANGRY'));
 					schoolIntro(doof);
 
-				case 'unhappy'
+				case 'unhappy':
 					startVideo('cutscene1')
 					
-				case 'happy'
+				case 'happy':
 					startVideo('cutscene2')
 					
-				case 'really-happy'
+				case 'really-happy':
 					startVideo('cutscene3')
 				default:
 					if (dialogueJson == null)
