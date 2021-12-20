@@ -1,6 +1,5 @@
 package;
 
-import openfl.Assets;
 #if desktop
 import Discord.DiscordClient;
 #end
@@ -20,11 +19,6 @@ import flixel.util.FlxColor;
 import lime.app.Application;
 import Achievements;
 import editors.MasterEditorMenu;
-import flixel.ui.FlxButton;
-import lime.app.Application;
-//import utils.AndroidData;
-
-//import ui.FlxVirtualPad; // lol
 
 using StringTools;
 
@@ -36,10 +30,8 @@ class MainMenuState extends MusicBeatState
 	var menuItems:FlxTypedGroup<FlxSprite>;
 	private var camGame:FlxCamera;
 	private var camAchievement:FlxCamera;
-
-	//var key_editors:FlxButton;
 	
-	var optionShit:Array<String> = ['story_mode', 'freeplay', #if ACHIEVEMENTS_ALLOWED 'awards', #end 'credits', #if !switch 'donate', #end 'options'/*, 'lol'*/];
+	var optionShit:Array<String> = ['story_mode', 'freeplay', #if ACHIEVEMENTS_ALLOWED 'awards', #end 'credits', #if !switch 'donate', #end 'options'];
 
 	var magenta:FlxSprite;
 	var camFollow:FlxObject;
@@ -141,8 +133,8 @@ class MainMenuState extends MusicBeatState
 		#end
 
 		#if mobileC
- 	 	addVirtualPad(FULL, A_B_C);
- 	 	#end
+		addVirtualPad(UP_DOWN, A_B_C);
+		#end
 
 		super.create();
 	}
@@ -238,13 +230,11 @@ class MainMenuState extends MusicBeatState
 					});
 				}
 			}
-			#if mobile
-			else if (_virtualpad.buttonC.justPressed)
+			else if (FlxG.keys.justPressed.SEVEN #if mobileC || _virtualpad.buttonC.justPressed #end)
 			{
 				selectedSomethin = true;
 				MusicBeatState.switchState(new MasterEditorMenu());
 			}
-			#end
 		}
 
 		super.update(elapsed);

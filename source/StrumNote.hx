@@ -38,7 +38,7 @@ class StrumNote extends FlxSprite
 
 			antialiasing = false;
 			setGraphicSize(Std.int(width * PlayState.daPixelZoom));
-			
+
 			switch (Math.abs(leData))
 			{
 				case 0:
@@ -68,7 +68,7 @@ class StrumNote extends FlxSprite
 			animation.addByPrefix('red', 'arrowRIGHT');
 
 			antialiasing = ClientPrefs.globalAntialiasing;
-			setGraphicSize(Std.int(width * 0.7));
+			setGraphicSize(Std.int(width * ClientPrefs.noteSize));
 
 			switch (Math.abs(leData))
 			{
@@ -142,9 +142,9 @@ class StrumNote extends FlxSprite
 		//centerOffsets();
 		//offset.x -= 13*(ClientPrefs.noteSize/0.7);
 		//offset.y -= 13*(ClientPrefs.noteSize/0.7);
-
+		
 		//like wtf was this ^^^
-
+		
 		centerOrigin();
 	}
 }

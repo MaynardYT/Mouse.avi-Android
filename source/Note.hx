@@ -60,7 +60,7 @@ class Note extends FlxSprite
 	public var copyAlpha:Bool = true;
 
 	public var hitHealth:Float = 0.023;
-	public var missHealth:Float = 0.09;
+	public var missHealth:Float = 0.0475;
 
 	public var texture(default, set):String = null;
 
@@ -93,7 +93,7 @@ class Note extends FlxSprite
 					if(isSustainNote) {
 						missHealth = 0.1;
 					} else {
-						missHealth = 0.6;
+						missHealth = 0.3;
 					}
 					hitCausesMiss = true;
 				case 'No Animation':
@@ -287,7 +287,8 @@ class Note extends FlxSprite
 			animation.addByPrefix('bluehold', 'blue hold piece');
 		}
 
-		setGraphicSize(Std.int(width * 0.7));
+		
+		setGraphicSize(Std.int(width * ClientPrefs.noteSize));
 		updateHitbox();
 	}
 

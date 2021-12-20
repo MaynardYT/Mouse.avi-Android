@@ -13,14 +13,13 @@ import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.FlxCamera;
-import ui.FlxVirtualPad;
 
 class PauseSubState extends MusicBeatSubstate
 {
 	var grpMenuShit:FlxTypedGroup<Alphabet>;
 
 	var menuItems:Array<String> = [];
-	var menuItemsOG:Array<String> = ['Resume', 'Restart Song', 'Charting State', 'Change Difficulty', 'Toggle Practice Mode', 'Botplay', 'Exit to menu'];
+	var menuItemsOG:Array<String> = ['Resume', 'Restart Song', 'Change Difficulty', 'Toggle Practice Mode', 'Botplay', 'Chart Editor', 'Exit to menu'];
 	var difficultyChoices = [];
 	var curSelected:Int = 0;
 
@@ -118,12 +117,13 @@ class PauseSubState extends MusicBeatSubstate
 		cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
 
 		#if mobileC
-		_virtualpad = new FlxVirtualPad(UP_DOWN, A);
-    	
-    	_virtualpad.alpha = 0.75;
-    	add(_virtualpad);
-    	// this.add(_virtualpad);
-		#end
+		addVirtualPad(UP_DOWN, A);
+		
+		var camcontrol = new FlxCamera();
+		FlxG.cameras.add(camcontrol);
+		camcontrol.bgColor.alpha = 0;
+		_virtualpad.cameras = [camcontrol];
+		#end		
 	}
 
 	override function update(elapsed:Float)
@@ -133,9 +133,9 @@ class PauseSubState extends MusicBeatSubstate
 
 		super.update(elapsed);
 
-		var upP = _virtualpad.buttonUp.justPressed;
-		var downP = _virtualpad.buttonDown.justPressed;
-		var accepted = _virtualpad.buttonA.justPressed;
+		var upP = controls.UI_UP_P;
+		var downP = controls.UI_DOWN_P;
+		var accepted = controls.ACCEPT;
 
 		if (upP)
 		{
@@ -145,6 +145,7 @@ class PauseSubState extends MusicBeatSubstate
 		{
 			changeSelection(1);
 		}
+
 		if (accepted)
 		{
 			var daSelected:String = menuItems[curSelected];
@@ -170,12 +171,12 @@ class PauseSubState extends MusicBeatSubstate
 				case 'Change Difficulty':
 					menuItems = difficultyChoices;
 					regenMenu();
+				case "Chart Editor":
+				    MusicBeatState.switchState(new editors.ChartingState());
 				case 'Toggle Practice Mode':
 					PlayState.practiceMode = !PlayState.practiceMode;
 					PlayState.usedPractice = true;
 					practiceText.visible = PlayState.practiceMode;
-				case 'Charting State':
-					MusicBeatState.switchState(new editors.ChartingState());
 				case "Restart Song":
 					CustomFadeTransition.nextCamera = transCamera;
 					MusicBeatState.resetState();

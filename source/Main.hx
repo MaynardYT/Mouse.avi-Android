@@ -8,9 +8,7 @@ import openfl.Lib;
 import openfl.display.FPS;
 import openfl.display.Sprite;
 import openfl.events.Event;
-#if android
 import lime.system.System;
-#end
 
 class Main extends Sprite
 {
@@ -23,10 +21,7 @@ class Main extends Sprite
 	var startFullscreen:Bool = false; // Whether to start the game in fullscreen on desktop targets
 	public static var fpsVar:FPS;
 
-	#if android
-	public static var path = lime.system.System.applicationStorageDirectory; // path to storage folder
-	#end
-
+	public static var path:String = System.applicationStorageDirectory;	
 
 	// You can pretty much ignore everything from here on - your code should go in your states.
 
@@ -76,17 +71,38 @@ class Main extends Sprite
 		#if !debug
 		initialState = TitleState;
 		#end
+
+		ClientPrefs.startControls();
 		
-		ClientPrefs.loadDefaultKeys();		
 		addChild(new FlxGame(gameWidth, gameHeight, initialState, zoom, framerate, framerate, skipSplash, startFullscreen));
+
 		var ourSource:String = "assets/videos/DO NOT DELETE OR GAME WILL CRASH/dontDelete.webm";
+
+		#if web
+		var str1:String = "HTML CRAP";
+		var vHandler = new VideoHandler();
+		vHandler.init1();
+		vHandler.video.name = str1;
+		addChild(vHandler.video);
+		vHandler.init2();
+		GlobalVideo.setVid(vHandler);
+		vHandler.source(ourSource);
+		#elseif sys
+		var str1:String = "WEBM SHIT"; 
+		var webmHandle = new WebmHandler();
+		webmHandle.source(ourSource);
+		webmHandle.makePlayer();
+		webmHandle.webm.name = str1;
+		addChild(webmHandle.webm);
+		GlobalVideo.setWebm(webmHandle);
+		#end
 
 		fpsVar = new FPS(10, 3, 0xFFFFFF);
 		addChild(fpsVar);
 		if(fpsVar != null) {
 			fpsVar.visible = ClientPrefs.showFPS;
 		}
-	
+
 		#if html5
 		FlxG.autoPause = false;
 		FlxG.mouse.visible = false;

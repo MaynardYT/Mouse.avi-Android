@@ -1,9 +1,5 @@
 package;
 
-#if MODS_ALLOWED
-import sys.io.File;
-import sys.FileSystem;
-#end
 import lime.utils.Assets;
 import openfl.utils.Assets as OpenFlAssets;
 import haxe.Json;
@@ -24,8 +20,6 @@ typedef WeekFile =
 	var startUnlocked:Bool;
 	var hideStoryMode:Bool;
 	var hideFreeplay:Bool;
-	var showcutscene:Bool;
-	var currentcutscene:String;
 }
 
 class WeekData {
@@ -44,12 +38,10 @@ class WeekData {
 	public var startUnlocked:Bool;
 	public var hideStoryMode:Bool;
 	public var hideFreeplay:Bool;
-	public var showcutscene:Bool;
-	public var currentcutscene:String;
 
 	public static function createWeekFile():WeekFile {
 		var weekFile:WeekFile = {
-			songs: [["Bopeebo", "dad", [146, 113, 253], "Bopeebo"], ["Fresh", "dad", [146, 113, 253], "Fresh"], ["Dad Battle", "dad", [146, 113, 253], "Dad Battle"]], //Yeah, aparentemente o negocio tem que ser mais bonitin, MERDA!!!
+			songs: [["Bopeebo", "dad", [146, 113, 253]], ["Fresh", "dad", [146, 113, 253]], ["Dad Battle", "dad", [146, 113, 253]]],
 			weekCharacters: ['dad', 'bf', 'gf'],
 			weekBackground: 'stage',
 			weekBefore: 'tutorial',
@@ -58,9 +50,7 @@ class WeekData {
 			freeplayColor: [146, 113, 253],
 			startUnlocked: true,
 			hideStoryMode: false,
-			hideFreeplay: false,
-			showcutscene: false,
-			currentcutscene: 'template'
+			hideFreeplay: false
 		};
 		return weekFile;
 	}
@@ -77,54 +67,49 @@ class WeekData {
 		startUnlocked = weekFile.startUnlocked;
 		hideStoryMode = weekFile.hideStoryMode;
 		hideFreeplay = weekFile.hideFreeplay;
-		showcutscene = weekFile.showcutscene;
-		currentcutscene = weekFile.currentcutscene;
 	}
 
 	public static function reloadWeekFiles(isStoryMode:Null<Bool> = false)
-		{
-			weeksList = [];
-			weeksLoaded.clear();
-			var directories:Array<String> = [Paths.getPreloadPath()];
-			var originalLength:Int = directories.length;
-	
-			var sexList:Array<String> = CoolUtil.coolTextFile(Paths.getPreloadPath('weeks/weekList.txt'));
-			for (i in 0...sexList.length) {
-				for (j in 0...directories.length) {
-					var fileToCheck:String = directories[j] + 'weeks/' + sexList[i] + '.json';
-					if(!weeksLoaded.exists(sexList[i])) {
-						var week:WeekFile = getWeekFile(fileToCheck);
-						if(week != null) {
-							var weekFile:WeekData = new WeekData(week);
-	
-	
-							if(weekFile != null && (isStoryMode == null || (isStoryMode && !weekFile.hideStoryMode) || (!isStoryMode && !weekFile.hideFreeplay))) {
-								weeksLoaded.set(sexList[i], weekFile);
-								weeksList.push(sexList[i]);
-							}
+	{
+		weeksList = [];
+		weeksLoaded.clear();
+		var directories:Array<String> = [Paths.getPreloadPath()];
+		var originalLength:Int = directories.length;
+
+		var sexList:Array<String> = CoolUtil.coolTextFile(Paths.getPreloadPath('weeks/weekList.txt'));
+		for (i in 0...sexList.length) {
+			for (j in 0...directories.length) {
+				var fileToCheck:String = directories[j] + 'weeks/' + sexList[i] + '.json';
+				if(!weeksLoaded.exists(sexList[i])) {
+					var week:WeekFile = getWeekFile(fileToCheck);
+					if(week != null) {
+						var weekFile:WeekData = new WeekData(week);
+
+						if(weekFile != null && (isStoryMode == null || (isStoryMode && !weekFile.hideStoryMode) || (!isStoryMode && !weekFile.hideFreeplay))) {
+							weeksLoaded.set(sexList[i], weekFile);
+							weeksList.push(sexList[i]);
 						}
 					}
 				}
 			}
-	
+		}
+	}
 
+	private static function getWeekFile(path:String):WeekFile {
+		var rawJson:String = null;
+		if(OpenFlAssets.exists(path)) {
+			rawJson = Assets.getText(path);
 		}
-	
-		private static function getWeekFile(path:String):WeekFile {
-			var rawJson:String = null;
-			if(OpenFlAssets.exists(path)) {
-				rawJson = Assets.getText(path);
-			}
-	
-			if(rawJson != null && rawJson.length > 0) {
-				return cast Json.parse(rawJson);
-			}
-			return null;
+
+		if(rawJson != null && rawJson.length > 0) {
+			return cast Json.parse(rawJson);
 		}
-	
-		//   FUNCTIONS YOU WILL PROBABLY NEVER NEED TO USE
-	
-		//To use on PlayState.hx or Highscore stuff
+		return null;
+	}
+
+	//   FUNCTIONS YOU WILL PROBABLY NEVER NEED TO USE
+
+	//To use on PlayState.hx or Highscore stuff
 	public static function getWeekFileName():String {
 		return weeksList[PlayState.storyWeek];
 	}
