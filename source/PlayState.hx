@@ -1024,13 +1024,13 @@ class PlayState extends MusicBeatState
 					schoolIntro(doof);
 
 				case 'unhappy':
-					startVideo('cutscene1')
+					startVideo('cutscene1');
 					
 				case 'happy':
-					startVideo('cutscene2')
+					startVideo('cutscene2');
 					
 				case 'really-happy':
-					startVideo('cutscene3')
+					startVideo('cutscene3');
 				default:
 					if (dialogueJson == null)
 						startCountdown();
