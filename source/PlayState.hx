@@ -321,6 +321,14 @@ class PlayState extends MusicBeatState
 		if(PlayState.SONG.stage == null || PlayState.SONG.stage.length < 1) {
 			switch (songName)
 			{
+                                case 'unhappy':
+					curStage = 'street1';
+                                case 'happy':
+					curStage = 'street2';
+                                case 'really-happy':
+					curStage = 'street3';
+                                case 'smile':
+					curStage ='streetalt';
 				case 'spookeez' | 'south' | 'monster':
 					curStage = 'spooky';
 				case 'pico' | 'blammed' | 'philly' | 'philly-nice':
